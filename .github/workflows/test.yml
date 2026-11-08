@@ -26,12 +26,12 @@ jobs:
           api_key: ${{ secrets.API_KEY }}
           MY_PASSWORD: ${{ secrets.MY_EMAIL_PASSWORD }}
         run: |
-          if [ -z "$MY_EMAIL" ]; then
-            echo "MY_EMAIL secret is not set!"
+          if [ -z "$api_key" ]; then
+            echo "API_KEY secret is not set!"
             echo "Go to Settings > Secrets > Actions and add it."
             exit 1
           else
-            echo "MY_EMAIL is configured"
+            echo "API_KEY is configured"
           fi
 
           if [ -z "$MY_PASSWORD" ]; then
@@ -60,13 +60,6 @@ jobs:
             echo "requirements.txt found"
           else
             echo "requirements.txt not found!"
-            exit 1
-          fi
-
-          if [ -f "birthdays.csv" ]; then
-            echo "birthdays.csv found"
-          else
-            echo "birthdays.csv not found!"
             exit 1
           fi
 
