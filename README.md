@@ -40,3 +40,45 @@ The application expects the following secrets provided as environment variables:
 ```bash
 git clone [https://github.com/des369code/Rain-Alert.git](https://github.com/des369code/Rain-Alert.git)
 cd Rain-Alert
+
+2. Create and activate a virtual environment
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+
+3. Install dependencies
+
+pip install -r requirements.txt
+
+
+4. Run with environment variables
+
+export api_key="your_openweathermap_api_key"
+export MY_PASSWORD="your_google_app_password"
+python3 main.py
+
+
+🤖 GitHub Actions Workflow
+
+The project includes automated workflows under .github/workflows/:
+
+scheduled.yml: Runs automatically every morning at 11:00 AM MYT (03:00 UTC) via GitHub Actions schedule cron, or manually via workflow_dispatch.
+
+test.yml: A dry-run workflow for validating syntax, repository structure, and secret configuration.
+
+Configuring Secrets in GitHub
+
+To allow GitHub Actions to inject variables:
+
+Navigate to Settings → Secrets and variables → Actions.
+
+Add the following repository secrets:
+
+API_KEY: Your OpenWeather API key.
+
+MY_EMAIL_PASSWORD: Your 16-character Google App Password.
+
+📄 License
+
+MIT
