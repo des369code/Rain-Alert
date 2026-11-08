@@ -1,38 +1,53 @@
-# To run and test the code you need to update 4 places:
-# 1. Change MY_EMAIL/MY_PASSWORD to your own details.
-# 2. Go to your email provider and make it allow less secure apps.
-# 3. Update the SMTP ADDRESS to match your email provider.
-# 4. Update birthdays.csv to contain today's month and day.
-# See the solution video in the 100 Days of Python Course for explainations.
-
-
-from datetime import datetime
-import pandas
-import random
+import requests
 import smtplib
 import os
 
-# import os and use it to get the Github repository secrets
-MY_EMAIL = os.environ.get("MY_EMAIL")
+MY_LAT = 3.0798396754365855
+MY_LONG = 101.62530233046918
+MY_EMAIL = "ddesmaandesmaan@gmail.com"
 MY_PASSWORD = os.environ.get("MY_PASSWORD")
+RECEIVER_EMAIL = "ddesmaandesmaan@gmail.com"
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
 
-today = datetime.now()
-today_tuple = (today.month, today.day)
+#API Key
+# A personal account number and password
+# The way how the API provider can track how much you are using their API
 
-data = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"])                  : data_row for (index, data_row) in data.iterrows()}
-if today_tuple in birthdays_dict:
-    birthday_person = birthdays_dict[today_tuple]
-    file_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(file_path) as letter_file:
-        contents = letter_file.read()
-        contents = contents.replace("[NAME]", birthday_person["name"])
+api_key = os.environ.get("api_key")
 
-    with smtplib.SMTP("YOUR EMAIL PROVIDER SMTP SERVER ADDRESS") as connection:
-        connection.starttls()
-        connection.login(MY_EMAIL, MY_PASSWORD)
+#API Endpoint Parameters
+parameters = {
+    "lat": MY_LAT,
+    "lon": MY_LONG,
+    "appid": api_key,
+    "cnt": 4,
+}
+
+api_endpoint = requests.get("https://api.openweathermap.org/data/2.5/forecast", params=parameters)
+api_endpoint.raise_for_status()
+
+weather_data = api_endpoint.json()
+# print(weather_data)
+
+# print(weather_data["list"][0]["weather"][0]["id"])
+
+will_rain = False
+
+for i in weather_data["list"]:
+    condition_code = int(i["weather"][0]["id"])
+    if condition_code < 700:
+        will_rain = True
+
+if will_rain:
+    subject = "Rain Alert !!!"
+    body = "It's going to rain in the next 3 hours. Remember to bring an umbrella!"
+    message = f"Subject:{subject}\n\n{body}"
+
+    with smtplib.SMTP(SMTP_SERVER, port=SMTP_PORT) as connection:
+        connection.starttls()  # Encrypts the connection
+        connection.login(user=MY_EMAIL, password=MY_PASSWORD)
         connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=birthday_person["email"],
-            msg=f"Subject:Happy Birthday!\n\n{contents}"
+            from_addr=MY_EMAIL, to_addrs=RECEIVER_EMAIL, msg=message
         )
+    print("Email sent successfully.")
