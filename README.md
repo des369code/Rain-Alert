@@ -16,8 +16,8 @@ An automated Python notification pipeline that queries the OpenWeather 5-Day / 3
 
 ## 🛠️ Tech Stack & Requirements
 
-* **Python 3.12+**
-* **Dependencies**:
+- **Python 3.12+**
+- **Dependencies**:
   * `requests` (API querying)
   * Standard library: `os`, `smtplib`, `email`
 
@@ -38,47 +38,48 @@ The application expects the following secrets provided as environment variables:
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/des369code/Rain-Alert.git](https://github.com/des369code/Rain-Alert.git)
+git clone https://github.com/des369code/Rain-Alert.git
 cd Rain-Alert
+```
 
-2. Create and activate a virtual environment
-
+### 2. Create and activate a virtual environment
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
 
-
-3. Install dependencies
-
+### 3. Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
-
-4. Run with environment variables
-
+### 4. Run with environment variables
+```bash
 export api_key="your_openweathermap_api_key"
 export MY_PASSWORD="your_google_app_password"
 python3 main.py
+```
 
+---
 
-🤖 GitHub Actions Workflow
+## 🤖 GitHub Actions Workflow
 
-The project includes automated workflows under .github/workflows/:
+The project includes automated workflows under `.github/workflows/`:
 
-scheduled.yml: Runs automatically every morning at 11:00 AM MYT (03:00 UTC) via GitHub Actions schedule cron, or manually via workflow_dispatch.
+- `scheduled.yml`: Runs automatically every morning at 11:00 AM MYT (03:00 UTC) via GitHub Actions schedule cron, or manually via `workflow_dispatch`.
+- `test.yml`: A dry-run workflow for validating syntax, repository structure, and secret configuration.
 
-test.yml: A dry-run workflow for validating syntax, repository structure, and secret configuration.
-
-Configuring Secrets in GitHub
+### Configuring Secrets in GitHub
 
 To allow GitHub Actions to inject variables:
 
-Navigate to Settings → Secrets and variables → Actions.
+1. Navigate to **Settings → Secrets and variables → Actions**.
+2. Add the following repository secrets:
+   - `API_KEY`: Your OpenWeather API key.
+   - `MY_EMAIL_PASSWORD`: Your 16-character Google App Password.
 
-Add the following repository secrets:
+---
 
-API_KEY: Your OpenWeather API key.
-
-MY_EMAIL_PASSWORD: Your 16-character Google App Password.
-
-📄 License
+## 📄 License
 
 MIT
